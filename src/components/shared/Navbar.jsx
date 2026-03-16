@@ -1,4 +1,5 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 export default function Navbar() {
   return (
@@ -103,7 +104,10 @@ export default function Navbar() {
               </a>
             </li>
             <li>
-              <a>Settings</a>
+              <a>Login</a>
+            </li>
+            <li>
+              <a>Register</a>
             </li>
             <li>
               <a>Logout</a>
