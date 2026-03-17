@@ -3,10 +3,10 @@ import { Link, Outlet } from 'react-router-dom';
 
 export default function Navbar() {
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-brandAccent border-b border-accent/30 px-6">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div tabIndex={0} role="button" className="lg:hidden text-brandPrimary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -25,31 +25,19 @@ export default function Navbar() {
           </div>
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content mt-3 w-52 rounded-box bg-background p-2 shadow"
           >
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+            <li><Link to="/">Home</Link></li>
+            <li><a>Contact</a></li>
+            <li><a>About</a></li>
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <a className="text-xl font-bold text-brandPrimary tracking-wider">Blog App</a>
       </div>
+
+
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 text-brandDark font-medium">
           <li>
             <Link to={'/'}>Home</Link>
           </li>
@@ -74,6 +62,7 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
+
       <div className="navbar-end">
         <input
           type="text"
