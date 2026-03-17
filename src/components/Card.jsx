@@ -1,42 +1,69 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { selectCurrentUser } from '../features/authSlice';
-import { toast } from 'react-toastify';
+import { FiShare2 } from 'react-icons/fi';
+import { FaRegComment, FaRegHeart } from 'react-icons/fa';
 
-export default function Card() {
-  const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
-
-  const handleClick = () => {
-    if (!user) {
-      toast.info('Please log in or register to continue.');
-      navigate('/sign-in');
-      return;
-    }
-
-    navigate('/blogs/1');
-  };
+export default function Card({ blog }) {
   return (
-    <div className="card bg-base-100 w-96 shadow-sm">
-      <figure>
+    <div className="bg-brandBackground rounded-lg shadow p-6 max-w-md mx-auto">
+      <div className="overflow-hidden rounded-lg">
         <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes"
+          src={blog.image}
+          alt={blog.title}
+          className="w-full h-56 object-cover"
         />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">
-          Card Title
-          <div className="badge badge-secondary">NEW</div>
+      </div>
+      <div className="mt-4">
+        <span className="inline-block bg-brandAccent/30 text-brandDark text-xs px-3 py-1 rounded mb-2">
+          on{' '}
+          {blog.createdAt
+            ? new Date(blog.createdAt).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })
+            : 'Unknown date'}
+        </span>
+        <div className="uppercase text-xs text-brandAccent tracking-widest font-semibold mt-2 mb-1">
+          {blog.category || 'LIFESTYLE'}
+        </div>
+        <h2 className="text-2xl font-bold text-brandPrimary mb-2">
+          {blog.title}
         </h2>
-        <p>
-          A card component has a figure, a body part, and inside body there are
-          title and actions parts
+        <p className="text-brandDark/80 mb-6">
+          {blog.description?.slice(0, 120) ||
+            'Phasellus blandit mattis ipsum, ac laoreet lorem lacinia et...'}
         </p>
-        <div className="card-actions justify-end">
-          <div className="badge badge-outline">Fashion</div>
-          <div className="badge badge-outline">Products</div>
+        <div className="flex items-center justify-between mt-4">
+          <button className="bg-brandAccent text-brandDark px-6 py-2 rounded tracking-widest font-semibold hover:bg-brandPrimary hover:text-white transition">
+            READ MORE
+          </button>
+          <div className="flex items-center gap-4">
+            {/* Share Icon */}
+            <button
+              title="Share"
+              className="text-brandPrimary hover:text-brandSecondary transition"
+            >
+              <FiShare2 className="w-6 h-6" />
+            </button>
+            {/* Comment Icon */}
+            <button
+              title="Comments"
+              className="relative text-brandAccent hover:text-brandPrimary transition"
+            >
+              <FaRegComment className="w-6 h-6" />
+              <span className="absolute -top-2 -right-2 bg-brandAccent text-xs text-white rounded px-1.5 py-0.5">
+                {blog.comments?.length || 0}
+              </span>
+            </button>
+            {/* Like Icon */}
+            <button
+              title="Like"
+              className="flex items-center gap-1 text-red-400 hover:text-red-600 transition"
+            >
+              <FaRegHeart className="w-6 h-6" />
+              <span className="text-xs">{blog.likes?.length || 0}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
