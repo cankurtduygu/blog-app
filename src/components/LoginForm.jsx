@@ -6,9 +6,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { updateUserInfo } from '../features/authSlice';
+import useAuthCall from '../hooks/useAuthCall';
 
 export default function LoginForm() {
   const dispatch = useDispatch();
+  const { signIn } = useAuthCall();
   const {
     register,
     handleSubmit,
@@ -22,21 +24,7 @@ export default function LoginForm() {
   });
 
   async function onSubmit(userCredentials) {
-    // console.log(data);
-
-    try {
-      const { data } = await axios.post(
-        'https://31121.fullstack.clarusway.com/auth/login',
-        userCredentials
-      );
-      console.log(data);
-      dispatch(updateUserInfo(data));
-
-      toast.success('Login başarılı');
-    } catch (error) {
-      toast.error('Login başarısız');
-      console.log('error:', error);
-    }
+   await signIn(userCredentials);
   }
 
   return (

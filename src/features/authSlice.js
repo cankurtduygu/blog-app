@@ -11,11 +11,11 @@ export const authSlice = createSlice({
   reducers: {
     updateUserInfo: (state, { payload }) => {
         if(payload.user){
-            const { email, username, isAdmin } = payload.user;//paload icinde bir suru sey geliyor sadece bu verileri alsak yeterli olur.
-            state.currentUser = { email, username, isAdmin };
+            const { email, username, isAdmin, firstName, lastName } = payload.user;//paload icinde bir suru sey geliyor sadece bu verileri alsak yeterli olur.
+            state.currentUser = { email, username, isAdmin, firstName, lastName };
         } else {
-            const { email, username, isAdmin } = payload.data;
-            state.currentUser = { email, username, isAdmin };
+            const { email, username, isAdmin, firstName, lastName } = payload.data;
+            state.currentUser = { email, username, isAdmin, firstName, lastName };
         }
         state.token = payload.token;
     },

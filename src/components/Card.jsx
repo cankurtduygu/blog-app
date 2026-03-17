@@ -1,9 +1,22 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { selectCurrentUser } from '../features/authSlice';
+import { toast } from 'react-toastify';
 
 export default function Card() {
+ const navigate = useNavigate();
+  const user = useSelector(selectCurrentUser);
 
-  const navigate = useNavigate();
+  const handleClick = () => {
+    if (!user) {
+      toast.info("Please log in or register to continue.");
+      navigate("/sign-in");
+      return;
+    }
+
+    navigate("/blogs/1");
+  };
   return (
     <div className="card lg:card-side bg-base-100 shadow-sm">
       <figure>
@@ -18,8 +31,8 @@ export default function Card() {
         <div className="card-actions justify-end">
           <button 
             className="btn btn-primary"
-            onClick={() => navigate('/protected/detail')}
-            >Listen</button>
+            onClick={handleClick}
+            >Show More</button>
         </div>
       </div>
     </div>

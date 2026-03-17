@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 export default function Navbar() {
   return (
@@ -51,7 +51,7 @@ export default function Navbar() {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Home</a>
+            <Link to={'/'}>Home</Link>
           </li>
           {/* <li>
             <details>
@@ -104,10 +104,10 @@ export default function Navbar() {
               </a>
             </li>
             <li>
-              <a>Login</a>
+              <Link to={'/sign-in'}>Login</Link>
             </li>
             <li>
-              <a>Register</a>
+              <Link to={'/sign-up'}>Register</Link>
             </li>
             <li>
               <a>Logout</a>

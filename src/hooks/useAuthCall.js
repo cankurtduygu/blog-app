@@ -1,0 +1,52 @@
+import { useDispatch } from 'react-redux';
+import { signUpSchema } from '../lib/schemas';
+import axios from 'axios';
+import { updateUserInfo } from '../features/authSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const useAuthCall = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const signIn = async (userCredentials) => {
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}auth/login`,
+        userCredentials
+      );
+      console.log(data);
+      navigate('/');
+      dispatch(updateUserInfo(data));
+
+      toast.success('Login başarılı');
+    } catch (error) {
+      toast.error('Login başarısız');
+      console.log('error:', error);
+    }
+  };
+
+  const signUp = async (userCredentials) => {
+
+     try {
+      const { data } = await axios.post(
+        `${BASE_URL}users`,
+        userCredentials
+      );
+      console.log(data);
+      // dispatch(updateUserInfo(data));
+
+      toast.success('Sign up successful');
+      navigate('/')
+    } catch (error) {
+      toast.error('Sign up failed');
+      console.log('error:', error);
+    }
+  };
+
+  return { signIn, signUp };
+};
+
+export default useAuthCall;

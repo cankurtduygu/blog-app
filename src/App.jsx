@@ -11,18 +11,21 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import CardDetail from './pages/CardDetail';
 import Layout from './components/shared/Layout';
-import { Provider } from 'react-redux';
-import { store } from './state/store';
-import { useSelector } from 'react-redux';
+import { Provider, useSelector } from "react-redux";
+import store, { persistor } from "./state/store";
+import { PersistGate } from "redux-persist/integration/react";
 import { selectCurrentUser } from './features/authSlice';
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function ProtectedRoute() {
+function ProtectedRoute({ children }) {
   const user = useSelector(selectCurrentUser);
-  console.log(user);
-  const currentUser = true; // Bunu gerçek auth state ile değiştir
-  return currentUser ? <Outlet /> : <Navigate to="/sign-in" />;
+
+  if (!user) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
+  return children;
 }
 
 const router = createBrowserRouter([
@@ -35,9 +38,12 @@ const router = createBrowserRouter([
       { path: 'sign-in', element: <SignIn /> },
       { path: 'sign-up', element: <SignUp /> },
       {
-        path: 'detail',
-        element: <ProtectedRoute />,
-        children: [{ index: true, element: <CardDetail /> }],
+        path: 'blogs/:id',
+        element: (
+          <ProtectedRoute>
+            <CardDetail />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -46,8 +52,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
-      <ToastContainer />
-      <RouterProvider router={router} />
+      <PersistGate loading={null} persistor={persistor}>
+        <ToastContainer />
+        <RouterProvider router={router} />
+      </PersistGate>
     </Provider>
   );
 }
