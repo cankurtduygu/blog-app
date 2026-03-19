@@ -11,11 +11,11 @@ export const authSlice = createSlice({
   reducers: {
     updateUserInfo: (state, { payload }) => {
         if(payload.user){
-            const { email, username, isAdmin, firstName, lastName } = payload.user;//paload icinde bir suru sey geliyor sadece bu verileri alsak yeterli olur.
-            state.currentUser = { email, username, isAdmin, firstName, lastName };
+            const { _id, email, username, isAdmin, firstName, lastName } = payload.user;//paload icinde bir suru sey geliyor sadece bu verileri alsak yeterli olur.
+            state.currentUser = { _id, email, username, isAdmin, firstName, lastName };
         } else {
-            const { email, username, isAdmin, firstName, lastName } = payload.data;
-            state.currentUser = { email, username, isAdmin, firstName, lastName };
+            const { _id, email, username, isAdmin, firstName, lastName } = payload.data;
+            state.currentUser = { _id, email, username, isAdmin, firstName, lastName };
         }
         state.token = payload.token;
     },
@@ -25,6 +25,7 @@ export const authSlice = createSlice({
 export const { updateUserInfo } = authSlice.actions;
 
 export const selectCurrentUser = (state) => state.auth.currentUser;//useSelectorda uzun uzun yazmamaik icin burda bu sekilde yazyioruz.
+
 export const selectToken = (state) => state.auth.token;
 
 export default authSlice.reducer

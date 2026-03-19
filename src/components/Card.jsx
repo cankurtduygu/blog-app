@@ -1,8 +1,26 @@
 import React from 'react';
 import { FiShare2 } from 'react-icons/fi';
-import { FaRegComment, FaRegHeart } from 'react-icons/fa';
+import { FaRegComment, FaRegHeart, FaHeart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-export default function Card({ blog }) {
+export default function Card({
+  blog,
+  categoryName,
+  toggleLike,
+  currentUserId,
+}) {
+  const plainText = blog.content.replace(/<[^>]+>/g, '');
+
+
+  const isLiked = blog.likes?.includes(currentUserId);
+
+
+  // console.log('currentUserId:', currentUserId);
+  // console.log('blog.likes:', blog.likes);
+  // console.log('first like:', blog.likes?.[0]);
+  // console.log('typeof currentUserId:', typeof currentUserId);
+  // console.log('typeof first like:', typeof blog.likes?.[0]);
+
   return (
     <div className="bg-brandBackground rounded-lg shadow p-6 max-w-md mx-auto">
       <div className="overflow-hidden rounded-lg">
@@ -24,18 +42,17 @@ export default function Card({ blog }) {
             : 'Unknown date'}
         </span>
         <div className="uppercase text-xs text-brandAccent tracking-widest font-semibold mt-2 mb-1">
-          {blog.category || 'LIFESTYLE'}
+          {categoryName || 'LIFESTYLE'}
         </div>
         <h2 className="text-2xl font-bold text-brandPrimary mb-2">
           {blog.title}
         </h2>
         <p className="text-brandDark/80 mb-6">
-          {blog.description?.slice(0, 120) ||
-            'Phasellus blandit mattis ipsum, ac laoreet lorem lacinia et...'}
+          {plainText.slice(0, 150) || 'Bunu ben yazdim...'}
         </p>
         <div className="flex items-center justify-between mt-4">
           <button className="bg-brandAccent text-brandDark px-6 py-2 rounded tracking-widest font-semibold hover:bg-brandPrimary hover:text-white transition">
-            READ MORE
+            <Link to={`/blogs/${blog._id}`}>READ MORE</Link>
           </button>
           <div className="flex items-center gap-4">
             {/* Share Icon */}
@@ -57,10 +74,16 @@ export default function Card({ blog }) {
             </button>
             {/* Like Icon */}
             <button
+              type="button"
               title="Like"
               className="flex items-center gap-1 text-red-400 hover:text-red-600 transition"
+              onClick={() => toggleLike(blog._id)}
             >
-              <FaRegHeart className="w-6 h-6" />
+              {isLiked ? (
+                <FaHeart className="w-6 h-6" />
+              ) : (
+                <FaRegHeart className="w-6 h-6" />
+              )}
               <span className="text-xs">{blog.likes?.length || 0}</span>
             </button>
           </div>
