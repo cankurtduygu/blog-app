@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const useBlogCall = () => {
+
   const token = useSelector(selectToken);
   const dispatch = useDispatch();
 
@@ -84,7 +85,6 @@ const useBlogCall = () => {
   };
 
 
-
 const getBlogsById = async (id) =>{
   try {
     dispatch(fetchStart());
@@ -112,11 +112,26 @@ const toggleLike = async (id) => {
     });
   } catch (error) {
     dispatch(fetchFail(error.message));
-    // console.log(error);
+    console.log(error);
   }
 };
 
-  return { getBlogs, getCategories, getBlogPageData, toggleLike, getBlogsById };
+const postComment = async (blogId, commentText) => {
+  try {
+    await axios.post(`${BASE_URL}comments`, { blogId: blogId, comment: commentText }, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    toast.success('Yorum başarıyla eklendi!');
+  } catch (error) {
+    toast.error('Yorum eklenemedi!');
+    dispatch(fetchFail(error.message));
+    console.log(error);
+  }
+};
+
+  return { getBlogs, getCategories, getBlogPageData, toggleLike, getBlogsById, postComment };
 };
 
 export default useBlogCall;
