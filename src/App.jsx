@@ -11,20 +11,19 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import CardDetail from './pages/CardDetail';
 import Layout from './components/shared/Layout';
-import { Provider, useSelector } from "react-redux";
-import store, { persistor } from "./state/store";
-import { PersistGate } from "redux-persist/integration/react";
+import { Provider, useSelector } from 'react-redux';
+import store, { persistor } from './state/store';
+import { PersistGate } from 'redux-persist/integration/react';
 import { selectCurrentUser } from './features/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 function ProtectedRoute({ children }) {
   const user = useSelector(selectCurrentUser);
-
   if (!user) {
-    return <Navigate to="/sign-in" replace />;
+    return null; // Sadece null döndür, toast Card'da gösterilecek
   }
-
   return children;
 }
 

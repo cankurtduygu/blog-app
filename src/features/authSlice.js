@@ -19,10 +19,14 @@ export const authSlice = createSlice({
         }
         state.token = payload.token;
     },
+    cleanAuth: (state) => {
+      state.currentUser = null;
+      state.token = null;
+    },
   },
 })
 
-export const { updateUserInfo } = authSlice.actions;
+export const { updateUserInfo, cleanAuth } = authSlice.actions;
 
 export const selectCurrentUser = (state) => state.auth.currentUser;//useSelectorda uzun uzun yazmamaik icin burda bu sekilde yazyioruz.
 

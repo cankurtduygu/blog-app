@@ -1,15 +1,17 @@
 import { useDispatch } from 'react-redux';
 import { signUpSchema } from '../lib/schemas';
 import axios from 'axios';
-import { updateUserInfo } from '../features/authSlice';
+import { cleanAuth, updateUserInfo } from '../features/authSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import useAxios from './useAxios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const useAuthCall = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { axiosWithoutToken, axiosWithToken } = useAxios();
 
   const signIn = async (userCredentials) => {
     try {
@@ -46,7 +48,25 @@ const useAuthCall = () => {
     }
   };
 
-  return { signIn, signUp };
+  const signOut = async () => {
+    await new Promise((res) => setTimeout(res, 2000));
+
+    try {
+      await axiosWithToken(`auth/logout`);
+
+      dispatch(cleanAuth());
+      navigate("/");
+    } catch (error) {
+      toast.error("Logout Failed", {
+        description:
+          error.response?.data?.message ||
+          error?.message ||
+          "Please check your credentials",
+      });
+    }
+  };
+
+  return { signIn, signUp, signOut };
 };
 
 export default useAuthCall;

@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useTransition } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import useAuthCall from '../../hooks/useAuthCall';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../features/authSlice';
 
 export default function Navbar() {
+  const { signOut } = useAuthCall();
+  const [isPending, startTransition] = useTransition();
+  const currentUser = useSelector(selectCurrentUser);
+
   return (
     <div className="navbar bg-brandAccent border-b border-accent/30 px-6">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="lg:hidden text-brandPrimary">
+          <div
+            tabIndex={0}
+            role="button"
+            className="lg:hidden text-brandPrimary"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -27,33 +38,27 @@ export default function Navbar() {
             tabIndex="-1"
             className="menu menu-sm dropdown-content mt-3 w-52 rounded-box bg-background p-2 shadow"
           >
-            <li><Link to="/">Home</Link></li>
-            <li><a>Contact</a></li>
-            <li><a>About</a></li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <a>Contact</a>
+            </li>
+            <li>
+              <a>About</a>
+            </li>
           </ul>
         </div>
-        <a className="text-xl font-bold text-brandPrimary tracking-wider">Blog App</a>
+        <a className="text-xl font-bold text-brandPrimary tracking-wider">
+          Blog App
+        </a>
       </div>
-
 
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 text-brandDark font-medium">
           <li>
             <Link to={'/'}>Home</Link>
           </li>
-          {/* <li>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2 bg-base-100 w-40 z-1">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
-          </li> */}
           <li>
             <a>Contact</a>
           </li>
@@ -86,21 +91,37 @@ export default function Navbar() {
             tabIndex="-1"
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <Link to={'/sign-in'}>Login</Link>
-            </li>
-            <li>
-              <Link to={'/sign-up'}>Register</Link>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <a className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      startTransition(() => {
+                        signOut();
+                      });
+                    }}
+                    disabled={isPending}
+                  >
+                    {isPending ? 'Çıkış Yapılıyor...' : 'Logout'}
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to={'/sign-in'}>Login</Link>
+                </li>
+                <li>
+                  <Link to={'/sign-up'}>Register</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
