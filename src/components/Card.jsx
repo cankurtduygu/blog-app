@@ -1,10 +1,9 @@
-import React from 'react';
-import { FiShare2 } from 'react-icons/fi';
 import { FaRegComment, FaRegHeart, FaHeart } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../features/authSlice';
 import { toast } from 'react-toastify';
+import useBlogCall from '../hooks/useBlogCall';
 
 export default function Card({
   blog,
@@ -16,35 +15,38 @@ export default function Card({
 
   const isLiked = blog.likes?.includes(currentUserId);
 
-  // console.log('currentUserId:', currentUserId);
-  // console.log('blog.likes:', blog.likes);
-  // console.log('first like:', blog.likes?.[0]);
-  // console.log('typeof currentUserId:', typeof currentUserId);
-  // console.log('typeof first like:', typeof blog.likes?.[0]);
+  const { getBlogs } = useBlogCall();
 
   const navigate = useNavigate();
   const currentUser = useSelector(selectCurrentUser);
 
   const handleReadMore = () => {
     if (!currentUser) {
-      toast.error("To read more, please register first or log in if you have an account.");
+      toast.error(
+        'To read more, please register first or log in if you have an account.'
+      );
       return;
     }
     navigate(`/blogs/${blog._id}`);
   };
 
+  const handleLike = async (_id) => {
+    await toggleLike(_id);
+    await getBlogs();
+  };
+
   return (
-    <div className="flex flex-col bg-white rounded-xl shadow-md p-4 gap-4 max-w-3xl mx-auto items-stretch border border-gray-100">
-      {/* Görsel */}
-      <div className="w-full h-40 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center bg-gray-100 mb-2">
+    <div className="flex flex-col md:flex-row bg-white rounded-xl shadow-md p-4 gap-4 max-w-3xl mx-auto items-stretch border border-brandAccent/40">
+      {/* Sol: Görsel */}
+      <div className="w-full md:w-64 h-48 md:h-auto rounded-lg overflow-hidden shrink-0 bg-gray-100">
         <img
           src={blog.image}
           alt={blog.title}
           className="object-cover w-full h-full"
         />
       </div>
-      {/* İçerik */}
-      <div className="flex flex-col flex-1 justify-between w-full">
+      {/* Sağ: İçerik */}
+      <div className="flex flex-col flex-1 justify-between">
         {/* Üst: Etiketler ve durumlar */}
         <div className="flex items-center gap-2 mb-1">
           <span className="flex items-center gap-1 text-xs text-gray-500">
@@ -57,25 +59,25 @@ export default function Card({
             Public
           </span>
           {blog.categoryName && (
-            <span className="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded">
+            <span className="bg-brandAccent/40 text-brandDark text-xs px-2 py-0.5 rounded">
               {blog.categoryName}
             </span>
           )}
           {blog.tags?.map((tag) => (
             <span
               key={tag}
-              className="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded"
+              className="bg-brandBackground text-brandPrimary text-xs px-2 py-0.5 rounded"
             >
               #{tag}
             </span>
           ))}
         </div>
         <Link to={`/blogs/${blog._id}`} className="block hover:underline">
-          <h2 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+          <h2 className="text-lg font-semibold text-brandDark mb-1 line-clamp-2">
             {blog.title}
           </h2>
         </Link>
-        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+        <p className="text-brandDark/70 text-sm mb-2 line-clamp-2">
           {plainText.slice(0, 120)}
           {plainText.length > 120 ? '...' : ''}
         </p>
@@ -89,13 +91,13 @@ export default function Card({
                 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
               }
               alt={blog.userId?.username || 'author'}
-              className="w-8 h-8 rounded-full object-cover border flex-shrink-0"
+              className="w-8 h-8 rounded-full object-cover border shrink-0"
             />
             <div className="flex flex-col min-w-0">
-              <span className="text-xs text-gray-700 font-medium truncate max-w-[120px]">
+              <span className="text-xs text-gray-700 font-medium truncate max-w-30">
                 {blog.userId?.username || 'Unknown'}
               </span>
-              <span className="text-xs text-gray-500 truncate max-w-[120px]">
+              <span className="text-xs text-gray-500 truncate max-w-30">
                 {blog.createdAt
                   ? new Date(blog.createdAt).toLocaleDateString('en-US', {
                       month: 'long',
@@ -112,10 +114,14 @@ export default function Card({
             <button
               type="button"
               title="Like"
-              className="flex items-center gap-1 text-red-400 hover:text-red-600 transition"
-              onClick={() => toggleLike(blog._id)}
+              className="flex items-center gap-1 text-red-500 hover:text-red-600 transition"
+              onClick={() => handleLike(blog._id)}
             >
-              <FaHeart className="w-5 h-5" />
+              {isLiked ? (
+                <FaHeart className="w-6 h-6" />
+              ) : (
+                <FaRegHeart className="w-6 h-6" />
+              )}
               <span className="text-xs text-gray-700">
                 {blog.likes?.length || 0}
               </span>
@@ -138,7 +144,7 @@ export default function Card({
               </span>
             </span>
             <button
-              className="bg-blue-200 text-blue-800 px-4 py-1 rounded-full font-medium hover:bg-blue-300 transition text-sm w-full sm:w-auto ml-auto sm:ml-2"
+              className="bg-brandSecondary/20 text-brandPrimary px-4 py-1 rounded-full font-medium hover:bg-brandSecondary/40 transition text-sm w-full sm:w-auto ml-auto sm:ml-2"
               onClick={handleReadMore}
             >
               Read More

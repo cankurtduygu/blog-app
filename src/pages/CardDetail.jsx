@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import { selectBlog } from '../features/blogSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectBlog, fetchBlogByIdSuccess } from '../features/blogSlice';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
@@ -11,21 +11,17 @@ import Sidebar from '../components/Sidebar';
 
 export default function CardDetail() {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { getBlogsById, toggleLike, postComment } = useBlogCall();
   const blog = useSelector(selectBlog);
   const currentUser = useSelector(selectCurrentUser);
 
-
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   // Yorum gönderme fonksiyonu
   const handleSubmitComment = async (commentText) => {
-
-   await postComment(blog.data._id, commentText)
-   await getBlogsById(blog.data._id);
-   setIsCommentOpen(false);
-
-
-
+    await postComment(blog.data._id, commentText);
+    await getBlogsById(blog.data._id);
+    setIsCommentOpen(false);
   };
 
   useEffect(() => {
@@ -34,10 +30,13 @@ export default function CardDetail() {
 
   if (!blog?.data) return <div className="text-center mt-10">Loading...</div>;
 
-  console.log(blog.data.comments);
+  // console.log(blog.data.comments);
 
-  const filteredMessages = blog.data.comments?.filter(comment => comment.userId._id === currentUser?._id) || [];
-  console.log(filteredMessages);
+  const filteredMessages =
+    blog.data.comments?.filter(
+      (comment) => comment.userId._id === currentUser?._id
+    ) || [];
+  // console.log(filteredMessages);
 
   const {
     title,
@@ -58,7 +57,16 @@ export default function CardDetail() {
 
   const handleLike = async () => {
     await toggleLike(_id);
-    await getBlogsById(_id);
+    
+    // likes'ı local olarak güncelle (getBlogsById tekrar çağrılırsa countOfVisitors artar)
+    const updatedLikes = isLiked
+      ? likes.filter((uid) => uid !== currentUserId)
+      : [...(likes || []), currentUserId];
+    dispatch(
+      fetchBlogByIdSuccess({
+        data: { ...blog, data: { ...blog.data, likes: updatedLikes } },
+      })
+    );
   };
 
   return (
@@ -69,7 +77,7 @@ export default function CardDetail() {
         handleSubmitComment={handleSubmitComment}
         filteredMessages={filteredMessages}
       />
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 mt-10">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 mt-10 border border-brandAccent/40">
         {/* Üst görsel */}
         <div className="w-full overflow-hidden rounded-2xl mb-6">
           <img
@@ -83,20 +91,20 @@ export default function CardDetail() {
           <h1 className="text-3xl md:text-4xl font-bold text-brandPrimary text-center mb-2">
             {title}
           </h1>
-          <span className="bg-gray-300 text-gray-700 text-sm px-4 py-1 rounded mb-2">
+          <span className="bg-brandAccent/40 text-brandDark text-sm px-4 py-1 rounded mb-2">
             {categoryId?.name || 'Category'}
           </span>
         </div>
         {/* Blog yazar ve ikonlar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-brandDark">
+            <div className="w-8 h-8 rounded-full bg-brandAccent/30 flex items-center justify-center font-bold text-brandDark">
               {userId?.username?.[0]?.toUpperCase() || '?'}
             </div>
             <span className="text-brandDark font-semibold">
               @{userId?.username}
             </span>
-            <span className="text-xs text-gray-500 ml-2">
+            <span className="text-xs text-brandDark/50 ml-2">
               {createdAt
                 ? new Date(createdAt).toLocaleDateString('en-US', {
                     month: 'long',
@@ -105,7 +113,7 @@ export default function CardDetail() {
                   })
                 : 'Unknown date'}
             </span>
-            <span className="text-xs text-gray-500 ml-2">6 min read</span>
+            <span className="text-xs text-brandDark/50 ml-2">6 min read</span>
           </div>
           <div className="flex items-center gap-6">
             {/* Like */}
@@ -125,7 +133,7 @@ export default function CardDetail() {
 
             {/* Comment */}
             <button
-              className="flex items-center gap-1 text-gray-500"
+              className="flex items-center gap-1 text-brandSecondary hover:text-brandPrimary transition"
               onClick={() => setIsCommentOpen(true)}
             >
               <FaRegCommentDots className="w-5 h-5" />
@@ -134,9 +142,8 @@ export default function CardDetail() {
               </span>
             </button>
 
-
             {/* Visitor */}
-            <div className="flex items-center gap-1 text-gray-500">
+            <div className="flex items-center gap-1 text-brandSecondary">
               <FaEye className="w-5 h-5" />
               <span className="text-sm font-semibold">
                 {countOfVisitors || 0}
@@ -157,15 +164,15 @@ export default function CardDetail() {
           {comments?.length ? (
             <ul className="space-y-4">
               {comments.map((c) => (
-                <li key={c._id} className="bg-gray-100 rounded-xl p-4">
+                <li key={c._id} className="bg-brandBackground rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center font-bold text-brandDark">
+                    <div className="w-6 h-6 rounded-full bg-brandAccent/30 flex items-center justify-center font-bold text-brandDark">
                       {c.username?.[0]?.toUpperCase() || '?'}
                     </div>
                     <span className="text-brandDark font-bold">
                       {c.username}
                     </span>
-                    <span className="text-xs text-gray-500 ml-auto">
+                    <span className="text-xs text-brandDark/50 ml-auto">
                       {c.createdAt
                         ? new Date(c.createdAt).toLocaleString()
                         : ''}

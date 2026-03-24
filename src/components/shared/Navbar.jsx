@@ -1,5 +1,5 @@
 import React, { useTransition } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useAuthCall from '../../hooks/useAuthCall';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../features/authSlice';

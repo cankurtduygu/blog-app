@@ -40,22 +40,22 @@ export const signUpSchema = z.object({
       .min(2, 'Last name must be at least 2 characters')
       .max(50, 'Last name must be less than 50 characters'),
 
-    image: z
-      .string()
-      .url('Image must be a valid URL')
-      .optional()
-      .or(z.literal('')),
+    // image: z
+    //   .string()
+    //   .url('Image must be a valid URL')
+    //   .optional()
+    //   .or(z.literal('')),
 
-    city: z
-      .string()
-      .min(2, 'City must be at least 2 characters')
-      .max(50, 'City must be less than 50 characters'),
+    // city: z
+    //   .string()
+    //   .min(2, 'City must be at least 2 characters')
+    //   .max(50, 'City must be less than 50 characters'),
 
-    bio: z
-      .string()
-      .max(200, 'Bio must be less than 200 characters')
-      .optional()
-      .or(z.literal('')),
+    // bio: z
+    //   .string()
+    //   .max(200, 'Bio must be less than 200 characters')
+    //   .optional()
+    //   .or(z.literal('')),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

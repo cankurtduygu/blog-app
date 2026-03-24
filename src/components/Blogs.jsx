@@ -11,7 +11,7 @@ import { selectCurrentUser } from '../features/authSlice';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export default function Blogs() {
+export default function Blogs({selectedCategory}) {
   const { getBlogPageData, toggleLike } = useBlogCall();
   const blogs = useSelector(selectBlogs);
   const categories = useSelector(selectCategories);
@@ -23,6 +23,10 @@ export default function Blogs() {
   const currentUserId = currentUser?._id;
   // console.log('currentUserId:', currentUserId);
   // console.log(blogs);
+
+  const filteredBlogs = selectedCategory
+  ? blogs.filter(( blog )=> blog.categoryId === selectedCategory)
+  : blogs;
 
   useEffect(() => {
     getBlogPageData();
@@ -38,8 +42,8 @@ export default function Blogs() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {blogs.map((blog) => (
+        <div className="grid gap-5 grid-cols-1 ">
+          {filteredBlogs.map((blog) => (
             <Card
               key={blog._id}
               blog={blog}

@@ -1,9 +1,7 @@
 import './App.css';
 import {
   createBrowserRouter,
-  Navigate,
   RouterProvider,
-  Outlet,
 } from 'react-router-dom';
 import Home from './pages/Home';
 import Error from './pages/Error';
@@ -17,7 +15,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { selectCurrentUser } from './features/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
 
 function ProtectedRoute({ children }) {
   const user = useSelector(selectCurrentUser);

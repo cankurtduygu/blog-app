@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux';
-import { signUpSchema } from '../lib/schemas';
 import axios from 'axios';
-import { selectToken, updateUserInfo } from '../features/authSlice';
+import { selectToken } from '../features/authSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import {

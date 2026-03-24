@@ -4,32 +4,41 @@ import { selectCurrentUser } from '../features/authSlice';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
-export default function Carousel({ blogs }) {
+export default function Carousel({blogs}) {
   const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);
 
-  const handleClick = () => {
+  
+
+  const filteredBlogs = [...blogs]
+  .sort((a, b) => b.countOfVisitors - a.countOfVisitors)
+  .slice(0, 3);
+
+
+  const handleClick = (blogId) => {
     if (!user) {
       toast.info('Please log in or register to continue.');
-      navigate('/sign-in');
+      navigate('/');
       return;
     }
 
-    navigate('/blogs/1');
+    navigate(`/blogs/${blogId}`);
   };
+
+
   return (
     <div className="carousel w-full">
-      {blogs.map((blog, index) => (
+      {filteredBlogs.map((blog, index) => (
         <div
-          key={blog.id}
-          id={`slide${blog.id}`}
+          key={blog._id}
+          id={`slide${index}`}
           className="carousel-item relative w-full"
         >
           <div className="grid w-full grid-cols-1 lg:grid-cols-2">
             <img
               src={blog.image}
               alt={blog.title}
-              className="h-[300px] w-full object-cover lg:h-[500px]"
+              className="h-75 w-full object-cover lg:h-125"
             />
 
             <div className="flex flex-col justify-center bg-brandBackground px-8 py-10 lg:px-16">
@@ -42,12 +51,12 @@ export default function Carousel({ blogs }) {
               </h2>
 
               <p className="mt-4 text-base text-brandDark/80 leading-relaxed">
-                {blog.description}
+                {blog.content.replace(/<[^>]+>/g, '').slice(0, 150) + '...'}
               </p>
 
               <button
                 className="mt-8 w-fit bg-brandSecondary px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-brandPrimary"
-                onClick={handleClick}
+                onClick={() => handleClick(blog._id)}
               >
                 Read More
               </button>
@@ -56,13 +65,13 @@ export default function Carousel({ blogs }) {
 
           <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
             <a
-              href={`#slide${index === 0 ? blogs.length : blogs[index - 1].id}`}
+              href={`#slide${index === 0 ? filteredBlogs.length - 1 : index - 1}`}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-brandPrimary text-white hover:bg-brandDark"
             >
               ❮
             </a>
             <a
-              href={`#slide${index === blogs.length - 1 ? blogs[0].id : blogs[index + 1].id}`}
+              href={`#slide${index === filteredBlogs.length - 1 ? 0 : index + 1}`}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-brandPrimary text-white hover:bg-brandDark"
             >
               ❯

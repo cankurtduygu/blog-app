@@ -1,5 +1,4 @@
 import { useDispatch } from 'react-redux';
-import { signUpSchema } from '../lib/schemas';
 import axios from 'axios';
 import { cleanAuth, updateUserInfo } from '../features/authSlice';
 import { toast } from 'react-toastify';
