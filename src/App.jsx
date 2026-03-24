@@ -15,6 +15,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { selectCurrentUser } from './features/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Write from './pages/Write';
 
 function ProtectedRoute({ children }) {
   const user = useSelector(selectCurrentUser);
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'sign-in', element: <SignIn /> },
       { path: 'sign-up', element: <SignUp /> },
+      { path: 'write', element: <Write /> },
       {
         path: 'blogs/:id',
         element: (

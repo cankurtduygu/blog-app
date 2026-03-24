@@ -47,6 +47,11 @@ export default function Navbar() {
             <li>
               <a>About</a>
             </li>
+            {currentUser && (
+              <li>
+                <Link to="/write">Write</Link>
+              </li>
+            )}
           </ul>
         </div>
         <a className="text-xl font-bold text-brandPrimary tracking-wider">
@@ -65,6 +70,11 @@ export default function Navbar() {
           <li>
             <a>About</a>
           </li>
+          {currentUser && (
+            <li>
+              <Link to="/write">Write</Link>
+            </li>
+          )}
         </ul>
       </div>
 

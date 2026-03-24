@@ -5,7 +5,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen flex">
       {/* Sol: Görsel / Marka alanı */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brandPrimary via-brandDark to-brandPrimary items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-brandPrimary via-brandDark to-brandPrimary items-center justify-center p-12">
         <div className="max-w-md text-center">
           <h2 className="text-4xl font-bold text-white mb-4">
             Start your journey with us

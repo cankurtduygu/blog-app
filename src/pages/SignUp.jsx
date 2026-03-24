@@ -10,7 +10,7 @@ export default function SignUp() {
       </div>
 
       {/* Sağ: Görsel / Marka alanı */}
-      <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-bl from-brandDark via-brandPrimary to-brandDark items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-5/12 bg-linear-to-bl from-brandDark via-brandPrimary to-brandDark items-center justify-center p-12">
         <div className="max-w-md text-center">
           <h2 className="text-4xl font-bold text-white mb-4">
             Share your story with the world
